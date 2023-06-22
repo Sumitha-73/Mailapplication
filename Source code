@@ -1,0 +1,65 @@
+from tkinter import Tk, Label, Entry, Text, Button
+def send_email():
+    sender = sender_entry.get()
+    receiver = receiver_entry.get()
+    subject = subject_entry.get()
+    message = message_text.get("1.0", "end")
+
+    try:
+        # Connect to the SMTP server
+        smtp_server = "smtp.example.com"  # Replace with your SMTP server address
+        smtp_port = 587  # Replace with the appropriate port for your SMTP server
+        smtp_username = "your_username"  # Replace with your SMTP username
+        smtp_password = "your_password"  # Replace with your SMTP password
+
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_username, smtp_password)
+
+        # Construct the email message
+        email_message = f"Subject: {subject}\n\n{message}"
+
+        # Send the email
+        server.sendmail(sender, receiver, email_message)
+
+        # Close the connection to the SMTP server
+        server.quit()
+
+        status_label.configure(text="Email sent successfully!", fg="green")
+    except Exception as e:
+        status_label.configure(text=f"Error: {str(e)}", fg="red")
+
+# Create the main window
+window = Tk()
+window.title("Mail Application")
+
+# Create and position the GUI widgets
+sender_label = Label(window, text="Sender Email:")
+sender_entry = Entry(window)
+
+receiver_label = Label(window, text="Receiver Email:")
+receiver_entry = Entry(window)
+
+subject_label = Label(window, text="Subject:")
+subject_entry = Entry(window)
+
+message_label = Label(window, text="Message:")
+message_text = Text(window, height=10, width=30)
+
+send_button = Button(window, text="Send", command=send_email)
+
+status_label = Label(window, text="")
+
+sender_label.grid(row=0, column=0)
+sender_entry.grid(row=0, column=1)
+receiver_label.grid(row=1, column=0)
+receiver_entry.grid(row=1, column=1)
+subject_label.grid(row=2, column=0)
+subject_entry.grid(row=2, column=1)
+message_label.grid(row=3, column=0)
+message_text.grid(row=3, column=1)
+send_button.grid(row=4, column=0, columnspan=2)
+status_label.grid(row=5, column=0, columnspan=2)
+
+# Start the application
+window.mainloop()
